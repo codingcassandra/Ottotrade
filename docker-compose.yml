@@ -1,0 +1,19 @@
+# These two services are independent at runtime: the frontend reads
+# public demo_* tables straight from Supabase (see README.md) and never
+# calls the backend. The backend container is here for local API
+# development and regenerating the Supabase seed data, not as a runtime
+# dependency of the frontend — so there's no depends_on between them.
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    ports:
+      - "8080:80"

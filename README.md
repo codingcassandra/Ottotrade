@@ -60,3 +60,20 @@ If your Vercel project root is `frontend`, use:
 - The frontend no longer calls `/api/*`.
 - AI event enrichment is disabled in this frontend-only deployment.
 - Login can be layered on later without restoring the Express runtime.
+
+## Run with Docker
+
+Both services are containerized for local development:
+
+```bash
+cp .env.example .env   # fill in VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
+docker compose up --build
+```
+
+- Backend (Express API) → http://localhost:4000
+- Frontend (built with nginx) → http://localhost:8080
+
+The two containers are independent — the frontend talks to Supabase
+directly, not to the backend container — see "Current deployment behavior"
+above.
+
