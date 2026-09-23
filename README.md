@@ -78,24 +78,30 @@ Project root `frontend`:
 
 ## Local development
 
-- Portfolio data, charts, event graph, and timeline come from Supabase.
-- The frontend no longer calls `/api/*`.
-- AI event enrichment is disabled in this frontend-only deployment.
-- Login can be layered on later without restoring the Express runtime.
+`npm run dev` (Vite) serves the app but **does not** run `frontend/api/*`
+functions — the Analysis tab will fail against it. Use `vercel dev` from
+`frontend/` to exercise the serverless function locally, or see "Run with
+Docker" below.
 
 ## Run with Docker
 
 Both services are containerized for local development:
 
 ```bash
-cp .env.example .env   # fill in VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
+cp .env.example .env   # fill in VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY / GEMINI_API_KEY
 docker compose up --build
 ```
 
 - Backend (Express API) → http://localhost:4000
-- Frontend (built with nginx) → http://localhost:8080
+- Frontend → http://localhost:8080
 
-The two containers are independent — the frontend talks to Supabase
-directly, not to the backend container — see "Current deployment behavior"
-above.
+The frontend container runs a small Express server that serves the built
+Vite app and re-implements the `/api/analyze` Gemini call from
+`frontend/api/analyze.js`, so the Analysis tab works the same as it does
+under `vercel dev` — it needs `GEMINI_API_KEY` set at container runtime (not
+a build arg, since the key must never reach the client bundle).
+
+The frontend and backend containers are otherwise independent — the app
+talks to Supabase directly for everything except the Analysis tab, not to
+the backend container — see "What's where" above.
 

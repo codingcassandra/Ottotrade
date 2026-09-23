@@ -15,5 +15,9 @@ services:
       args:
         VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
         VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    # GEMINI_API_KEY is runtime-only (see frontend/api/analyze.js) — it must
+    # never be a build arg, or it would leak into the client bundle.
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
     ports:
       - "8080:80"

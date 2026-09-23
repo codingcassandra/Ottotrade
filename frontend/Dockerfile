@@ -17,9 +17,24 @@ ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
 
 RUN npm run build
 
-# --- serve stage ---
-FROM nginx:alpine
+# --- runtime stage ---
+# Not nginx: docker-server.js also re-implements the Vercel serverless
+# function at api/analyze.js, so it needs a Node process, not static hosting.
+FROM node:20-alpine
 
-COPY --from=build /app/dist /usr/share/nginx/html
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+COPY api ./api
+COPY docker-server.js ./
+COPY --from=build /app/dist ./dist
+
+# Set at container runtime, never at build time — it must not reach the
+# client bundle (see api/analyze.js and README.md).
+ENV GEMINI_API_KEY=""
 
 EXPOSE 80
+
+CMD ["node", "docker-server.js"]
