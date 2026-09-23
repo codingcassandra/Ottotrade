@@ -32,15 +32,26 @@ export function setRememberMe(remember) {
   } catch {
     // Storage unavailable (e.g. private browsing) — fall back to in-memory default.
   }
-  // Force the next getSupabase() call to rebuild the client against the right storage.
-  authClient = undefined;
 }
+
+// Supabase only touches this storage at the moment it reads or writes the session, so
+// resolving the preference lazily here (rather than baking a fixed localStorage/
+// sessionStorage choice into the client at creation time) keeps a single, stable
+// client for the app's whole lifetime. That matters because App.jsx's
+// onAuthStateChange listener is attached to one client instance — rebuilding the
+// client after login (as a naive fix would) would sign in on a client the listener
+// isn't watching, and the app would never notice it's authenticated.
+const rememberAwareStorage = {
+  getItem: (key) => (rememberMePreference() ? window.localStorage : window.sessionStorage).getItem(key),
+  setItem: (key, value) => (rememberMePreference() ? window.localStorage : window.sessionStorage).setItem(key, value),
+  removeItem: (key) => (rememberMePreference() ? window.localStorage : window.sessionStorage).removeItem(key),
+};
 
 export function getSupabase() {
   requireConfig();
   authClient ??= createClient(url, anonKey, {
     auth: {
-      storage: rememberMePreference() ? window.localStorage : window.sessionStorage,
+      storage: rememberAwareStorage,
       persistSession: true,
       autoRefreshToken: true,
     },

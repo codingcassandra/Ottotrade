@@ -1,14 +1,36 @@
-.sidebar { width: 190px; flex-shrink: 0; display: flex; flex-direction: column; gap: 18px; padding: 18px 10px; border-right: 1px solid var(--border); }
-.sidebar-brand { font-weight: 800; font-size: 15px; letter-spacing: 0.02em; padding: 0 10px; }
-.sidebar-tabs { display: flex; flex-direction: column; gap: 2px; }
-.sidebar-tab { display: flex; align-items: center; gap: 10px; background: transparent; border: none; border-radius: 9px; padding: 10px 10px; font-size: 13.5px; font-weight: 600; color: var(--muted); cursor: pointer; text-align: left; }
-.sidebar-tab:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+.sidebar { width: 230px; flex-shrink: 0; display: flex; flex-direction: column; gap: 22px; padding: 20px 12px; border-right: 1px solid var(--border); background: var(--card); }
+
+.sidebar-brand { display: flex; align-items: center; gap: 9px; padding: 0 8px; font-weight: 800; font-size: 16px; letter-spacing: -.01em; }
+.sidebar-logo { width: 30px; height: 30px; object-fit: contain; flex-shrink: 0; }
+
+.sidebar-tabs { display: flex; flex-direction: column; gap: 3px; }
+.sidebar-tab { display: flex; align-items: center; gap: 11px; background: transparent; border: none; border-radius: 9px; padding: 11px 12px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; text-align: left; }
+.sidebar-tab:hover { background: rgba(255,255,255,0.05); color: var(--text); }
 .sidebar-tab.active { background: var(--card2); color: var(--text); }
 .sidebar-tab.active .sidebar-tab-icon { color: var(--accent); }
-.sidebar-tab-icon { width: 18px; text-align: center; font-size: 15px; }
+.sidebar-tab-icon { width: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; }
+
+/* Profile — pinned to the bottom of the sidebar. */
+.sidebar-profile { position: relative; margin-top: auto; border-top: 1px solid var(--border); padding-top: 12px; }
+.profile-button { width: 100%; display: flex; align-items: center; gap: 9px; background: transparent; border: none; border-radius: 9px; padding: 9px 10px; cursor: pointer; text-align: left; color: var(--text); }
+.profile-button:hover { background: rgba(255,255,255,0.05); }
+.profile-avatar { display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 800; }
+.profile-email { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.profile-caret { font-size: 10px; flex-shrink: 0; }
+
+.profile-menu { position: absolute; bottom: calc(100% + 6px); left: 0; right: 0; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.55); z-index: 20; }
+.profile-menu-email { padding: 7px 9px 8px; border-bottom: 1px solid var(--border); margin-bottom: 5px; color: var(--muted); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.profile-menu-item { width: 100%; display: block; background: transparent; border: none; border-radius: 7px; padding: 9px; color: var(--neg); font: inherit; font-size: 13px; font-weight: 700; text-align: left; cursor: pointer; }
+.profile-menu-item:hover { background: rgba(239,68,68,0.12); }
+.profile-menu-item:disabled { opacity: .6; cursor: default; }
 
 @media (max-width: 900px) {
-  .sidebar { width: 100%; flex-direction: row; align-items: center; border-right: none; border-bottom: 1px solid var(--border); padding: 8px 12px; overflow-x: auto; }
-  .sidebar-tabs { flex-direction: row; }
-  .sidebar-brand { display: none; }
+  .sidebar { width: 100%; flex-direction: row; align-items: center; gap: 12px; border-right: none; border-bottom: 1px solid var(--border); padding: 8px 12px; overflow-x: visible; }
+  .sidebar-tabs { flex-direction: row; overflow-x: auto; }
+  .sidebar-brand span { display: none; }
+  .sidebar-brand { padding: 0; }
+  /* Sits at the end of the row, and the menu drops down instead of up. */
+  .sidebar-profile { margin-top: 0; margin-left: auto; border-top: none; padding-top: 0; flex-shrink: 0; }
+  .profile-email { display: none; }
+  .profile-menu { bottom: auto; top: calc(100% + 6px); left: auto; right: 0; min-width: 190px; }
 }
